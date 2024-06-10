@@ -1,0 +1,47 @@
+Code:
+module alu(r,a,b,op);
+input [7:0]a,b;
+input [2:0]op;
+output [7:0]r;
+wire [7:0]r1,r2;
+reg [7:0]r3;
+assign r1=a;
+assign r2=b;
+assign r=r3;
+always@(op or r1 or r2)
+begin
+//operation in alu
+case(op)
+0:r3=r1+r2;
+1:r3=r1-r2;
+2:r3=~r1;
+3:r3=~r2;
+4:r3=~(r1 & r2);
+5:r3=r1 & r2;
+6:r3=r1 | r2;
+7:r3=r1^r2;
+default:r3=8'bz;
+endcase
+end
+endmodule
+
+
+Testbench:
+module alu_TB();
+reg [7:0]a,b;
+reg [2:0]op;
+wire [7:0]r;
+alu uut(.r(r),.a(a),.b(b),.op(op));
+initial begin
+a=8'b01101010;
+b=8'b00111011;
+op=0;#100;
+op=1;#100;
+op=2;#100;
+op=3;#100;
+op=4;#100;
+op=5;#100;
+op=6;#100;
+op=7;#100;
+end
+endmodule
