@@ -1,0 +1,70 @@
+Code:
+module pram(data_out_0,data_out_1,clk,data_in,wr_en,rd_en,port_en_0,port_en_1,addr_0,addr_1);
+input clk;
+input wr_en,rd_en,port_en_0,port_en_1;
+input [3:0] addr_0,addr_1;
+input [7:0] data_in;
+output reg [7:0] data_out_0,data_out_1;
+reg [7:0] mem[15:0];
+always@(posedge clk)
+begin
+if(port_en_0 == 1 && wr_en == 1 && rd_en == 0)
+mem[addr_0]<=data_in;
+end
+always@(posedge clk)
+begin
+if(port_en_0 == 1 && rd_en == 1)
+begin
+data_out_0<=mem[addr_0];
+end
+else begin
+data_out_0<=8'bz;
+end
+if(port_en_1 == 1 && rd_en == 1)
+begin
+data_out_1<=mem[addr_1];
+end
+else begin
+data_out_1<=8'bz;
+end
+end
+endmodule
+
+
+
+Testbench:
+module pram_TB();
+reg clk,port_en_0,port_en_1,wr_en,rd_en;
+reg [7:0] data_in;
+reg [3:0] addr_0,addr_1;
+wire [7:0] data_out_0,data_out_1;
+integer i;
+pram AA(data_out_0,data_out_1,clk,data_in,wr_en,rd_en,port_en_0,port_en_1,addr_0,addr_1);
+always
+#5 clk=~clk;
+initial begin
+clk=0;
+addr_0=0;
+addr_1=0;
+port_en_0=0;
+port_en_1=0;
+data_in=0;
+#20;
+wr_en=1;
+rd_en=0;
+port_en_0=1;
+for(i=1;i<=16;i=i+1)
+begin
+data_in=i;
+addr_0=i-1;
+#10;
+end
+rd_en=1;
+wr_en=0;
+port_en_1=1;
+port_en_0=0;
+for(i=1;i<=16;i=i+1)
+begin
+addr_1=i-1;
+#10;
+end
