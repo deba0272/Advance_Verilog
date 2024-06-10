@@ -22,6 +22,7 @@ case(op)
 7:r3=r1^r2;
 default:r3=8'bz;
 endcase
+$monitor("value of r3=%b",r3);
 end
 endmodule
 
